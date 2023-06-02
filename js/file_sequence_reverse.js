@@ -1,13 +1,15 @@
 const fs = require('fs');
 
-let targetDir = "/tmp/example_target";
-let outputDir = "/tmp/example_out";
+if (process.argv.length <= 3) {
+    console.log("usage: file_sequence_reverse source_directory output_directory");
+    process.exit(1);
+}
 
 let args = process.argv.slice(2);
-targetDir = args[0];
+srcDir = args[0];
 outputDir = args[1];
 
-fs.readdir(targetDir, (err, files) => {
+fs.readdir(srcDir, (err, files) => {
   if (err) throw err;
 
   let pngFiles = files.filter(file => file.endsWith('.png'));
@@ -17,8 +19,8 @@ fs.readdir(targetDir, (err, files) => {
     if (!match) return;
 
     let number = match[1];
-    let reversedNumber = (pngFiles.length - number + 2).toString().padStart(3, '0');
-    let source = `${targetDir}/${file}`;
+    let reversedNumber = (pngFiles.length - number + 1).toString().padStart(3, '0');
+    let source = `${srcDir}/${file}`;
     let destination = `${outputDir}/${file.replace(number, reversedNumber)}`;
 
     console.log(`Copying ${source} to ${destination}`);
